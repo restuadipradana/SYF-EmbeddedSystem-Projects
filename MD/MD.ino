@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * Metal detector 
  * Send value to server
