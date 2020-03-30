@@ -7,12 +7,6 @@
 
 #include <WiFi.h>
  
-const char* ssid = "MES";
-const char* password =  "00000000";
-//IPAddress staticIP(172,16,3,80); // IP the board
-//IPAddress gateway(172,16,3,254);
-//IPAddress subnet(255,255,0,0);
- 
 String translateEncryptionType(wifi_auth_mode_t encryptionType) {
  
   switch (encryptionType) {
@@ -57,31 +51,23 @@ void scanNetworks() {
   }
 }
  
-void connectToNetwork() {
-  WiFi.begin(ssid, password);
-  //WiFi.config(staticIP, gateway, subnet);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Establishing connection to WiFi..");
-  }
- 
-  Serial.println("Connected to network");
- 
-}
+
  
 void setup() {
  
   Serial.begin(115200);
- 
-  scanNetworks();
-  connectToNetwork();
- 
-  Serial.println(WiFi.macAddress());
-  Serial.println(WiFi.localIP());
- 
-  //WiFi.disconnect(true);
-  Serial.println(WiFi.localIP());
- 
+   WiFi.mode(WIFI_STA);
+    WiFi.disconnect();
+    delay(100);
+     scanNetworks();
+
+
 }
  
-void loop() {}
+void loop() {
+  if (Serial.available() > 0) {
+    String incoming = Serial.readString();
+    Serial.println(incoming);
+    scanNetworks();
+  }
+}

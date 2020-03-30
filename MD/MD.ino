@@ -36,8 +36,9 @@ IPAddress gateway(172,16,3,254);
 IPAddress subnet(255,255,0,0);
 
 // REPLACE with your Domain name and URL path or IP address with path
-const char* serverName = "http://172.16.3.79:49908/api/Sensor/Sensor";  //MES
+//const char* serverName = "http://172.16.3.79:49908/api/Sensor/Sensor";  //MES
 //const char* serverName = "http://172.16.165.79:49908/api/Sensor/Sensor";  //guest
+const char* serverName = "http://172.16.1.7:80/MetalDetector/api/Sensor/Sensor";  //server
 
 // Define NTP Client to get time
 WiFiUDP ntpUDP;
@@ -93,15 +94,24 @@ void loop() {
   
   if (sensor==LOW)        //No object detected (pull down)
   {
-    objectDet = true;
-    Serial.println(" OK 4 NO");
+    defact = digitalRead(b);
+    if (defact==HIGH)    //defact lights up 
+    {
+      Serial.println(" OK 7 DEF");
+      objectDet = false;
+    }
+    else
+    {
+      Serial.println(" OK 4 NO");
+      objectDet = true;
+    }
   }
   else if (sensor==HIGH)    //Object Detected!
   {
     Serial.println(" OK 5 DET");
     if (objectDet == true)
     {
-      delay(1150);
+      delay(1350);
       //check defact trigger
       defact = digitalRead(b);
       if (defact==HIGH)    //defact lights up 
@@ -145,7 +155,9 @@ void sendData(int stat)
                             + String(justDate) + "";
       Serial.println(httpRequestData);
       int httpResponseCode = http.POST(httpRequestData);
+      //String payload = http.getString();
       Serial.println(httpResponseCode);
+      //Serial.println(payload);
       http.end();
    }
    else {
